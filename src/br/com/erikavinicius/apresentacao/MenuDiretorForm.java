@@ -7,7 +7,9 @@
 package br.com.erikavinicius.apresentacao;
 
 import br.com.erikavinicius.TrabalhoSeguranca;
+import br.com.erikavinicius.dados.BancoDadosDepartamento;
 import br.com.erikavinicius.dados.BancoDadosFuncionario;
+import br.com.erikavinicius.entidade.Departamento;
 import br.com.erikavinicius.entidade.Usuario;
 import java.sql.SQLException;
 import java.util.List;
@@ -23,11 +25,13 @@ public class MenuDiretorForm extends javax.swing.JFrame {
 
     private TrabalhoSeguranca trabalhoSeguranca;
     private BancoDadosFuncionario bancoDadosFuncionario;
+    private BancoDadosDepartamento bancoDadosDepartamento;
     
     public MenuDiretorForm(TrabalhoSeguranca trabalhoSeguranca) {
         initComponents();
         this.trabalhoSeguranca = trabalhoSeguranca;
         this.bancoDadosFuncionario = bancoDadosFuncionario;
+        this.bancoDadosDepartamento = bancoDadosDepartamento;
     }
 
     /**
@@ -42,12 +46,12 @@ public class MenuDiretorForm extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         itmCadastroDepartamentos = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        itmListaDepartamento = new javax.swing.JMenuItem();
         itmMenuCadastrarFuncionario = new javax.swing.JMenu();
         itmCadastroFuncionarios = new javax.swing.JMenuItem();
         itmListaFuncionarios = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setExtendedState(6);
 
         jMenu1.setText("Departamentos");
@@ -61,14 +65,14 @@ public class MenuDiretorForm extends javax.swing.JFrame {
         });
         jMenu1.add(itmCadastroDepartamentos);
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0));
-        jMenuItem1.setText("Lista de Departamentos");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        itmListaDepartamento.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0));
+        itmListaDepartamento.setText("Lista de Departamentos");
+        itmListaDepartamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                itmListaDepartamentoActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(itmListaDepartamento);
 
         jMenuBar1.add(jMenu1);
 
@@ -115,9 +119,24 @@ public class MenuDiretorForm extends javax.swing.JFrame {
         cadastroFuncionarioForm.setVisible(true);
     }//GEN-LAST:event_itmCadastroFuncionariosActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    private void itmListaDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmListaDepartamentoActionPerformed
+       List<Departamento> listaDepartamentos = null;
+        try {
+            listaDepartamentos = this.bancoDadosDepartamento.ConsultaTodosDepartamentos();
+        } catch (SQLException ex) {
+            Logger.getLogger(MenuDiretorForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(!listaDepartamentos.isEmpty()){
+           try{
+            ListaDepartamentoForm listaDepartamentoForm = new ListaDepartamentoForm(this.trabalhoSeguranca);
+            listaDepartamentoForm.setVisible(true); 
+           }catch(Exception e){
+               
+           }
+        }else{
+            JOptionPane.showMessageDialog(this, "Não possui Departamentos Cadastrados! Cadastre um Novo!", "Erro", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_itmListaDepartamentoActionPerformed
 
     private void itmCadastroDepartamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmCadastroDepartamentosActionPerformed
         List<Usuario> listaUsuario = null;
@@ -178,10 +197,10 @@ public class MenuDiretorForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem itmCadastroDepartamentos;
     private javax.swing.JMenuItem itmCadastroFuncionarios;
+    private javax.swing.JMenuItem itmListaDepartamento;
     private javax.swing.JMenuItem itmListaFuncionarios;
     private javax.swing.JMenu itmMenuCadastrarFuncionario;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     // End of variables declaration//GEN-END:variables
 }

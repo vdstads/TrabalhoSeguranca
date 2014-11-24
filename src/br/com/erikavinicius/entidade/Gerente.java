@@ -11,16 +11,5 @@ package br.com.erikavinicius.entidade;
  * @author ALUNO 2014 2
  */
 public class Gerente extends Usuario {
-    private Departamento departamento;
-
-    public Departamento getDepartamento() {
-        return departamento;
-    }
-
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
-    }
-    
-    
-    
+   
 }

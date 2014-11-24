@@ -6,10 +6,13 @@
 
 package br.com.erikavinicius.apresentacao;
 
+import br.com.erikavinicius.CryptographyTripleDES;
 import br.com.erikavinicius.TrabalhoSeguranca;
 import br.com.erikavinicius.dados.BancoDados;
 import br.com.erikavinicius.dados.BancoDadosDepartamento;
 import br.com.erikavinicius.dados.BancoDadosFuncionario;
+import br.com.erikavinicius.entidade.Departamento;
+import br.com.erikavinicius.entidade.Gerente;
 import br.com.erikavinicius.entidade.Usuario;
 import java.sql.SQLException;
 import java.util.List;
@@ -22,17 +25,23 @@ import javax.swing.JOptionPane;
  *
  * @author Erika
  */
-public class CadastroDepartamentoForm extends javax.swing.JFrame {
+public class EditaDepartamentoForm extends javax.swing.JFrame {
 
     private TrabalhoSeguranca trabalhoSeguranca;
     private BancoDadosFuncionario bancoDadosFuncionario;
     private BancoDadosDepartamento bancoDadosDepartamento;
-    public CadastroDepartamentoForm(TrabalhoSeguranca trabalhoSeguranca) {
+    private String codigoDep;
+    private String CPF_Atual;
+    
+    public EditaDepartamentoForm(TrabalhoSeguranca trabalhoSeguranca, String codigoDep, String CPFAtual) {
         initComponents();
     this.trabalhoSeguranca = trabalhoSeguranca;
     this.bancoDadosFuncionario = bancoDadosFuncionario;
     this.bancoDadosDepartamento = bancoDadosDepartamento;
+    this.codigoDep = codigoDep;
+    this.CPF_Atual = CPFAtual;
     this.configurarCmbGerente();
+    this.preencher();
     
     }
 
@@ -50,22 +59,22 @@ public class CadastroDepartamentoForm extends javax.swing.JFrame {
         txtCodigo = new javax.swing.JTextField();
         lblNome = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
-        btnCadastrar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
         cmbFuncionario = new javax.swing.JComboBox();
         lblGerente = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro de Departamento", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 18))); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Edição de Departamento", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 18))); // NOI18N
 
         lblCodigo.setText("Código:");
 
         lblNome.setText("Nome:");
 
-        btnCadastrar.setText("Cadastrar");
-        btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCadastrarActionPerformed(evt);
+                btnEditarActionPerformed(evt);
             }
         });
 
@@ -83,26 +92,17 @@ public class CadastroDepartamentoForm extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCodigo)
-                            .addComponent(txtNome)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblCodigo)
-                                    .addComponent(lblNome))
-                                .addGap(0, 311, Short.MAX_VALUE))
-                            .addComponent(cmbFuncionario, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtCodigo)
+                    .addComponent(txtNome)
+                    .addComponent(cmbFuncionario, 0, 364, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(127, 127, 127)
-                                .addComponent(btnCadastrar))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(lblGerente)))
+                            .addComponent(lblCodigo)
+                            .addComponent(lblNome)
+                            .addComponent(lblGerente))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -121,9 +121,9 @@ public class CadastroDepartamentoForm extends javax.swing.JFrame {
                 .addComponent(lblGerente)
                 .addGap(16, 16, 16)
                 .addComponent(cmbFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCadastrar)
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addGap(36, 36, 36)
+                .addComponent(btnEditar)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -150,36 +150,42 @@ public class CadastroDepartamentoForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_cmbFuncionarioActionPerformed
 
-    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        Usuario usrTemp = new Usuario();
-        usrTemp = (Usuario) this.cmbFuncionario.getSelectedItem();
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        Departamento depTemp = new Departamento();
+        depTemp = (Departamento) this.cmbFuncionario.getSelectedItem();
                 
         String nome = this.txtNome.getText().trim();
         String codigo = this.txtCodigo.getText().trim();
-        String cpfGerente = usrTemp.getCpf();
+        String cpfGerente = depTemp.getGerente().getCpf();
          
         if(nome.isEmpty() || codigo.isEmpty()){
             JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.WARNING_MESSAGE);    
         }else{
             try {
-                this.bancoDadosDepartamento.CriarDepartamento(codigo, nome, cpfGerente);
+                this.bancoDadosDepartamento.EditaDepartamento(codigo, nome, cpfGerente, codigoDep);
             } catch (SQLException ex) {
-                Logger.getLogger(CadastroDepartamentoForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EditaDepartamentoForm.class.getName()).log(Level.SEVERE, null, ex);
             }
-           JOptionPane.showMessageDialog(this, "Departamento adicionado com sucesso!", "Cadastro de Departamento", JOptionPane.INFORMATION_MESSAGE);
+           JOptionPane.showMessageDialog(this, "Departamento Editado com sucesso!", "Edição de Departamento", JOptionPane.INFORMATION_MESSAGE);
            limpar();
            this.dispose();
         }
-    }//GEN-LAST:event_btnCadastrarActionPerformed
+    }//GEN-LAST:event_btnEditarActionPerformed
 
     private void configurarCmbGerente() {
         DefaultComboBoxModel model = (DefaultComboBoxModel) this.cmbFuncionario.getModel();
         model.removeAllElements();
         
         List<Usuario> listaTodos = null;
-       // List<Usuario> listaGerenteTemp;
+        Usuario user = null;
+        try {
+            user = this.bancoDadosFuncionario.ConsultaFuncionarioPorCPF(CPF_Atual);
+        } catch (SQLException ex) {
+            Logger.getLogger(EditaDepartamentoForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             listaTodos = this.bancoDadosFuncionario.ConsultaGerenteDisponivel();
+            listaTodos.add(user);
         } catch (Exception e) {
         }
         
@@ -206,17 +212,41 @@ public class CadastroDepartamentoForm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroDepartamentoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditaDepartamentoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroDepartamentoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditaDepartamentoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroDepartamentoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditaDepartamentoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroDepartamentoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EditaDepartamentoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
+        //</editor-fold>
+
         /* Create and display the form */
+        
+    }
+    private void preencher() {
+
+        Departamento depTemp = new Departamento();
+        List<Departamento> listaDepartamento = null;
+        try {
+            listaDepartamento  = this.bancoDadosDepartamento.ConsultaTodosDepartamentos();
+            //listaDepartamento = BancoDadosFuncionario.ConsultaGerentePorCPF(CPF_Atual);
+        } catch (SQLException ex) {
+            Logger.getLogger(EditaDepartamentoForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        for (Departamento departamento : listaDepartamento) {
+            if (departamento.getCodigo().equals(codigoDep)) {
+               depTemp = departamento;
+               break;
+            }
+        }
+        cmbFuncionario.setSelectedItem(depTemp.getGerente().getNome());
+        txtCodigo.setText(depTemp.getCodigo());        
+        txtNome.setText(depTemp.getNome());
         
     }
     
@@ -226,7 +256,7 @@ public class CadastroDepartamentoForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCadastrar;
+    private javax.swing.JButton btnEditar;
     private javax.swing.JComboBox cmbFuncionario;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCodigo;
