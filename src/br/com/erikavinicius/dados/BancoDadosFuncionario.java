@@ -278,6 +278,7 @@ public class BancoDadosFuncionario {
                 usuario.setCpf(resultado.getString(1));
                 usuario.setNome(resultado.getString(2));
                 //Adiciona um item à lista que será retornada
+                //----------------------------------
                 
             }
 
