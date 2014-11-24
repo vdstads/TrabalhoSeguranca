@@ -52,3 +52,4 @@ INSERT INTO FUNCIONARIO VALUES('324.534.645-65','Fulano','fulano@gmail.com','+q2
 INSERT INTO FUNCIONARIO VALUES('765.378.492-30','Gerente Do Departamento de DO','agsg@hjg.com','+q26GS45rb8=','GERENTE',NULL)
 INSERT INTO DEPARTAMENTO VALUES('DEP Dois','Departameto de DO','765.378.492-30')
 INSERT INTO DEPARTAMENTO VALUES('Dep RH','Departamento de recursos humanos','324.234.532-45')
+

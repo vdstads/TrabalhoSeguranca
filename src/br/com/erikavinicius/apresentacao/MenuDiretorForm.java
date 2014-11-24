@@ -69,10 +69,11 @@ public class MenuDiretorForm extends javax.swing.JFrame {
         itmListaDepartamento.setText("Lista de Departamentos");
         itmListaDepartamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmListaDepartamentoActionPerformed(evt);
+			itmListaDepartamentoActionPerformed(evt);
             }
         });
-        jMenu1.add(itmListaDepartamento);
+                
+
 
         jMenuBar1.add(jMenu1);
 
@@ -118,25 +119,6 @@ public class MenuDiretorForm extends javax.swing.JFrame {
         CadastroFuncionarioForm cadastroFuncionarioForm = new CadastroFuncionarioForm(this.trabalhoSeguranca);
         cadastroFuncionarioForm.setVisible(true);
     }//GEN-LAST:event_itmCadastroFuncionariosActionPerformed
-
-    private void itmListaDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmListaDepartamentoActionPerformed
-       List<Departamento> listaDepartamentos = null;
-        try {
-            listaDepartamentos = this.bancoDadosDepartamento.ConsultaTodosDepartamentos();
-        } catch (SQLException ex) {
-            Logger.getLogger(MenuDiretorForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if(!listaDepartamentos.isEmpty()){
-           try{
-            ListaDepartamentoForm listaDepartamentoForm = new ListaDepartamentoForm(this.trabalhoSeguranca);
-            listaDepartamentoForm.setVisible(true); 
-           }catch(Exception e){
-               
-           }
-        }else{
-            JOptionPane.showMessageDialog(this, "Não possui Departamentos Cadastrados! Cadastre um Novo!", "Erro", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_itmListaDepartamentoActionPerformed
 
     private void itmCadastroDepartamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmCadastroDepartamentosActionPerformed
         List<Usuario> listaUsuario = null;
@@ -194,13 +176,33 @@ public class MenuDiretorForm extends javax.swing.JFrame {
         
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JMenuItem itmCadastroDepartamentos;
     private javax.swing.JMenuItem itmCadastroFuncionarios;
-    private javax.swing.JMenuItem itmListaDepartamento;
+
+    private void itmListaDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmListaDepartamentoActionPerformed
+       List<Departamento> listaDepartamentos = null;
+        try {
+            listaDepartamentos = this.bancoDadosDepartamento.ConsultaTodosDepartamentos();
+        } catch (SQLException ex) {
+            Logger.getLogger(MenuDiretorForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(!listaDepartamentos.isEmpty()){
+           try{
+            ListaDepartamentoForm listaDepartamentoForm = new ListaDepartamentoForm(this.trabalhoSeguranca);
+            listaDepartamentoForm.setVisible(true); 
+           }catch(Exception e){
+               
+           }
+        }else{
+            JOptionPane.showMessageDialog(this, "Não possui Departamentos Cadastrados! Cadastre um Novo!", "Erro", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_itmListaDepartamentoActionPerformed
+
     private javax.swing.JMenuItem itmListaFuncionarios;
     private javax.swing.JMenu itmMenuCadastrarFuncionario;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    // End of variables declaration//GEN-END:variables
+    private javax.swing.JMenuItem itmListaDepartamento;
+    // End of variables declaration                   
 }
